@@ -2,15 +2,14 @@ package com.example.store.controllers;
 
 import com.example.store.dto.ProductRequestDTO;
 import com.example.store.entities.Product;
+import com.example.store.entities.ProductCategory;
 import com.example.store.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -35,5 +34,14 @@ public class ProductController {
             return ResponseEntity.ok().body(newProduct);
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity findByCategory(@PathVariable ProductCategory category){
+        List<Product> products = this.productRepository.findProductByCategory(category);
+        if(products.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(products);
     }
 }
