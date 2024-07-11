@@ -87,4 +87,32 @@ public class WishlistService {
             return ResponseEntity.notFound().build();
         }
     }
+
+    public ResponseEntity<Wishlist> removeItemFromWishlist(String wishlistId, String productName) {
+        Optional<Wishlist> optionalWishlist = wishlistRepository.findById(wishlistId);
+
+        if (optionalWishlist.isPresent()) {
+            Wishlist wishlist = optionalWishlist.get();
+            WishlistItem itemToRemove = null;
+
+            for (WishlistItem item : wishlist.getItems()) {
+                if (item.getProductName().equals(productName)) {
+                    itemToRemove = item;
+                    break;
+                }
+            }
+
+            if (itemToRemove != null) {
+                wishlist.getItems().remove(itemToRemove);
+                wishlist.setPriceTotal(wishlist.getPriceTotal() - itemToRemove.getPrice() * itemToRemove.getQuantity());
+                Wishlist updatedWishlist = wishlistRepository.save(wishlist);
+                return ResponseEntity.ok(updatedWishlist);
+            } else {
+                return ResponseEntity.badRequest().body(null);
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

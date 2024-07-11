@@ -20,8 +20,13 @@ public class WishlistController {
         return wishlistService.createWishlist(wishlist);
     }
 
-    @PostMapping("/{wishlistId}/items")
+    @PostMapping("/{wishlistId}/insert")
     public ResponseEntity<Wishlist> addItemToWishlist(@PathVariable String wishlistId, @RequestBody WishlistItem newItem) {
         return wishlistService.addItemToWishlist(wishlistId, newItem);
+    }
+
+    @DeleteMapping("/{wishlistId}/remove/{productName}")
+    public ResponseEntity<Wishlist> removeItemFromWishlist(@PathVariable String wishlistId, @PathVariable String productName) {
+        return wishlistService.removeItemFromWishlist(wishlistId, productName);
     }
 }
