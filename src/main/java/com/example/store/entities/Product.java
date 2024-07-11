@@ -18,9 +18,10 @@ public class Product {
     private String id;
     private String name;
     private String description;
-    private int price;
+    private float price;
     private int quantity;
 
     @Enumerated(EnumType.STRING)
     private ProductCategory category;
+
 }
