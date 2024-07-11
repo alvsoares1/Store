@@ -31,7 +31,6 @@ public class WishlistService {
     public ResponseEntity<Wishlist> createWishlist(Wishlist wishlist) {
         float priceTotal = 0;
 
-
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
@@ -39,7 +38,6 @@ public class WishlistService {
         }
 
         String token = authorizationHeader.substring(7);
-
 
         String username = tokenService.validateToken(token);
 
@@ -50,7 +48,7 @@ public class WishlistService {
         wishlist.setCreatedBy(username);
 
         for (WishlistItem item : wishlist.getItems()) {
-            Optional<Product> optionalProduct = productRepository.findProductByName(item.getProductName());
+            Optional<Product> optionalProduct = productRepository.findById(item.getProductId());
 
             if (optionalProduct.isPresent()) {
                 Product product = optionalProduct.get();
@@ -71,7 +69,7 @@ public class WishlistService {
 
         if (optionalWishlist.isPresent()) {
             Wishlist wishlist = optionalWishlist.get();
-            Optional<Product> optionalProduct = productRepository.findProductByName(newItem.getProductName());
+            Optional<Product> optionalProduct = productRepository.findById(newItem.getProductId());
 
             if (optionalProduct.isPresent()) {
                 Product product = optionalProduct.get();
@@ -88,7 +86,7 @@ public class WishlistService {
         }
     }
 
-    public ResponseEntity<Wishlist> removeItemFromWishlist(String wishlistId, String productName) {
+    public ResponseEntity<Wishlist> removeItemFromWishlist(String wishlistId, String productId) {
         Optional<Wishlist> optionalWishlist = wishlistRepository.findById(wishlistId);
 
         if (optionalWishlist.isPresent()) {
@@ -96,7 +94,7 @@ public class WishlistService {
             WishlistItem itemToRemove = null;
 
             for (WishlistItem item : wishlist.getItems()) {
-                if (item.getProductName().equals(productName)) {
+                if (item.getProductId().equals(productId)) {
                     itemToRemove = item;
                     break;
                 }
@@ -114,5 +112,4 @@ public class WishlistService {
             return ResponseEntity.notFound().build();
         }
     }
-
 }

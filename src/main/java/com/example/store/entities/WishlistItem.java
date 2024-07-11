@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WishlistItem {
-    private String productName;
+    private String productId;
     private int quantity;
     private float price;
 }
